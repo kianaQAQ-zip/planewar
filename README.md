@@ -110,6 +110,38 @@ M3 加入了音效（`AudioManager`，基于 SFML Audio）。把以下 `.wav` �
 
 ---
 
+## 测试与质量保障
+
+项目用一套**零依赖自研测试 harness**覆盖纯逻辑层，并用 **AddressSanitizer** 守护内存安全。
+详细策略、可测/不可测边界、MSVC 的 ASan 坑见 [`docs/测试与质量保障(M4).md`](./docs/测试与质量保障(M4).md)。
+
+### 跑单元测试（无需 SFML）
+
+```bash
+cmake -B build
+cmake --build build --target PlaneWarTests
+./build/PlaneWarTests        # Windows：build/PlaneWarTests.exe
+```
+
+覆盖：`Vec2` 运算、对象池（Acquire/复用/池满/ForEachActive）、事件总线（类型安全/多订阅/Clear）、圆形碰撞边界、`GameConfig`/`WaveDef` 合理性。
+
+### 开 ASan 验证零泄漏
+
+```bash
+# GCC / Clang
+cmake -B build -DENABLE_ASAN=ON -DCMAKE_BUILD_TYPE=Release
+cmake --build build && ./build/PlaneWar
+
+# MSVC：CMake 设置里加 ENABLE_ASAN=ON，配置选 Release / RelWithDebInfo
+#       （勿选 Debug——/ZI 增量调试信息与 ASan 冲突）
+```
+
+> 仓库内 `grep new/delete/malloc` 结果为 **0**——所有动态资源走 `unique_ptr`（资源缓存）
+> 或对象池 `vector<T>` 值存储（高频实体），「零泄漏」在架构层面已被锁死；ASan 把它变成
+> 可执行的回归防线。
+
+---
+
 ## 开发里程碑
 
 | 阶段 | 目标 | 状态 |
@@ -118,7 +150,7 @@ M3 加入了音效（`AudioManager`，基于 SFML Audio）。把以下 `.wav` �
 | **M1** | 最小可玩：玩家 + 射击 + 敌机 + 圆形碰撞 + 对象池 | ✅ 完成 |
 | **M2** | 数据驱动波次系统 + 事件总线 + 分数 + HUD | ✅ 完成 |
 | **M3** | Boss（状态机）+ 道具（策略）+ 音效 + 粒子 | ✅ 完成 |
-| **M4** | ASan 零泄漏 + 单元测试 + 文档打磨 | ⏳ 待做 |
+| **M4** | ASan 零泄漏 + 单元测试 + 文档打磨 | ✅ 完成 |
 
 ---
 
@@ -141,6 +173,10 @@ M3 加入了音效（`AudioManager`，基于 SFML Audio）。把以下 `.wav` �
 planewar/
 ├── CMakeLists.txt
 ├── README.md
+├── tests/                       # M4 单元测试（零依赖 harness，无需 SFML）
+│   ├── test_framework.h         # 极简测试框架（注册表式）
+│   ├── test_main.cpp            # 测试入口 / 统计
+│   └── test_math / objectpool / eventbus / collision / config .cpp
 ├── src/
 │   ├── main.cpp                 # App 层入口（主循环）
 │   ├── core/                    # 对 SFML 的薄封装 + 工具

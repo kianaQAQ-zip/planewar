@@ -90,3 +90,38 @@ if(WIN32 AND SFML_FOUND)
             COMMENT "PlaneWar: 拷贝 openal32.dll（SFML 音频依赖）")
     endif()
 endif()
+
+# ---------------------------------------------------------------------------
+# M4：单元测试（纯逻辑层，不依赖 SFML，可脱离游戏 exe 独立构建/运行）
+# ---------------------------------------------------------------------------
+option(BUILD_TESTS "Build the PlaneWar unit-test target" ON)
+if(BUILD_TESTS)
+    file(GLOB TEST_SRC CONFIGURE_DEPENDS tests/*.cpp)
+    add_executable(PlaneWarTests ${TEST_SRC})
+    # 被测单元（Math / ObjectPool / EventBus / Collision / GameConfig / WaveDef）
+    # 全部是 SFML-free 头文件，因此测试目标无需链接 SFML，也无需编译游戏 .cpp。
+    target_include_directories(PlaneWarTests PRIVATE src)
+    if(MSVC)
+        target_compile_options(PlaneWarTests PRIVATE /utf-8)
+    endif()
+endif()
+
+# ---------------------------------------------------------------------------
+# M4：AddressSanitizer 开关（零泄漏 + 内存错误检测）
+# 用法：cmake -DENABLE_ASAN=ON -DCMAKE_BUILD_TYPE=Release ..
+#   - GCC/Clang：-fsanitize=address（含 LeakSanitizer，退出时报告泄漏）
+#   - MSVC：/fsanitize=address（含堆越界/use-after-free；MSVC ASan 与 Debug 的
+#     /ZI、/RTC、迭代器调试级别冲突，故建议用 Release / RelWithDebInfo 配置跑）
+# ---------------------------------------------------------------------------
+option(ENABLE_ASAN "Build PlaneWar with AddressSanitizer" OFF)
+if(ENABLE_ASAN)
+    if(MSVC)
+        target_compile_options(PlaneWar PRIVATE /fsanitize=address /RTC-)
+        target_link_options(PlaneWar PRIVATE /fsanitize=address /INCREMENTAL:NO)
+        target_compile_definitions(PlaneWar PRIVATE _ITERATOR_DEBUG_LEVEL=0)
+    else()
+        target_compile_options(PlaneWar PRIVATE -fsanitize=address -fno-omit-frame-pointer)
+        target_link_options(PlaneWar PRIVATE -fsanitize=address)
+    endif()
+    message(STATUS "PlaneWar: AddressSanitizer ENABLED")
+endif()
