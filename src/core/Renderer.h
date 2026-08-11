@@ -23,6 +23,11 @@ public:
     // 这样「没有美术素材也能看到 demo 跑起来」，且 Game 层完全无感。
     void DrawEntity(SpriteId id, const Vec2& position, float radius, unsigned int fallbackColor);
 
+    // HUD 文本绘制。字体来自 AssetManager；若未加载字体则静默跳过（Game 层无感）。
+    // 这把「SFML 文本」也关在 Core 里，Game 层依旧只见不到 sf::Text。
+    void DrawText(const std::string& text, const Vec2& position,
+                  unsigned int charSize, unsigned int color);
+
     void Display();
 
 private:

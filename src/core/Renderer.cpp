@@ -1,5 +1,6 @@
 #include "Renderer.h"
 #include "AssetManager.h"
+#include <string>
 
 Renderer::Renderer(sf::RenderWindow& window, const AssetManager& assets)
     : window_(window), assets_(assets)
@@ -63,4 +64,18 @@ void Renderer::DrawEntity(SpriteId id, const Vec2& position, float radius, unsig
 void Renderer::Display()
 {
     window_.display();
+}
+
+void Renderer::DrawText(const std::string& text, const Vec2& position,
+                        unsigned int charSize, unsigned int color)
+{
+    // Core 兜底：没有字体就不画，绝不崩溃。HUD 调用方完全无感。
+    const sf::Font* font = assets_.GetFont();
+    if (!font)
+        return;
+
+    sf::Text t(text, *font, charSize);
+    t.setFillColor(sf::Color(color));
+    t.setPosition(position.x, position.y);
+    window_.draw(t);
 }

@@ -23,15 +23,12 @@ int main()
     Window window(800, 600, "PlaneWar");
     auto& assets = AssetManager::Instance();
 
-    // M0 背景图：没有也能跑（深空蓝兜底清屏）
-    assets.LoadTexture(SpriteId::Background, "assets/background.png");
-
     Renderer renderer(window.GetRaw(), assets);
     Time time;
     World world;
-    world.LoadAssets(assets);
+    world.LoadAssets(assets);   // 统一在此登记所有贴图与字体（缺资源自动兜底）
 
-    std::cout << "[M1] 计划-war 启动：方向键/WASD 移动，空格射击。\n";
+    std::cout << "[M2] PlaneWar 启动：方向键/WASD 移动，空格射击。\n";
 
     bool gameOverPrinted = false;
 
@@ -59,7 +56,7 @@ int main()
 
         if (world.IsGameOver() && !gameOverPrinted)
         {
-            std::cout << "[M1] 游戏结束！得分: " << world.GetScore() << "\n";
+            std::cout << "[M2] 游戏结束！得分: " << world.GetScore() << "\n";
             gameOverPrinted = true;
         }
     }
