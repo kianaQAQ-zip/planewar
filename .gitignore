@@ -1,0 +1,17 @@
+# Build artifacts
+build/
+out/
+bin/
+
+# IDE / user files
+.vs/
+*.user
+*.suo
+CMakeSettings.json
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Internal workspace memory
+.workbuddy/
