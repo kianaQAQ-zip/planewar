@@ -4,6 +4,7 @@
 #include <vector>
 #include <functional>
 #include <utility>
+#include "core/Math.h"   // BossFireEvent 用到 Vec2
 
 // 事件总线（设计模式：观察者 / 发布-订阅）
 // ---------------------------------------------------------------------------
@@ -28,6 +29,21 @@ struct PlayerHitEvent
 {
     int remainingLives = 0;
 };
+
+// ---- M3 新增事件 ----
+// Boss 发射请求：Boss 自己不知道子弹池，只发「我在哪、用什么弹幕、玩家在哪」，
+// 由 World 订阅并生成敌弹——Boss 与子弹系统互不认识（解耦）。
+struct BossFireEvent
+{
+    Vec2 origin  = {};   // 发射原点（Boss 位置）
+    int  pattern = 1;    // 弹幕模式：1=五路扇形，2=八路环形
+    Vec2 target  = {};   // 玩家位置（瞄准用，预留）
+};
+
+struct BossSpawnedEvent  {};   // Boss 进场：触发音效 / 提示
+struct BossHitEvent      {};   // Boss 被击中：音效 / 火花
+struct BossDefeatedEvent {};   // Boss 被击毁：大爆炸 / 胜利
+struct ItemPickupEvent   {};   // 拾取道具：音效 / 粒子
 
 class EventBus
 {

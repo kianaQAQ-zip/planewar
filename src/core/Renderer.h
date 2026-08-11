@@ -28,6 +28,12 @@ public:
     void DrawText(const std::string& text, const Vec2& position,
                   unsigned int charSize, unsigned int color);
 
+    // 实心圆（粒子用）。颜色含 Alpha（0xRRGGBBAA），按调用方给的数值绘制，不做精灵查表。
+    void DrawCircle(const Vec2& position, float radius, unsigned int color);
+
+    // 实心矩形（血条背景/前景用）。topLeft 为左上角，w/h 为尺寸。
+    void DrawRect(const Vec2& topLeft, float w, float h, unsigned int color);
+
     void Display();
 
 private:

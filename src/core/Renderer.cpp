@@ -79,3 +79,21 @@ void Renderer::DrawText(const std::string& text, const Vec2& position,
     t.setPosition(position.x, position.y);
     window_.draw(t);
 }
+
+void Renderer::DrawCircle(const Vec2& position, float radius, unsigned int color)
+{
+    const float r = radius > 0.f ? radius : 1.f;
+    sf::CircleShape circle(r);
+    circle.setFillColor(sf::Color(color));
+    circle.setOrigin(r, r);
+    circle.setPosition(position.x, position.y);
+    window_.draw(circle);
+}
+
+void Renderer::DrawRect(const Vec2& topLeft, float w, float h, unsigned int color)
+{
+    sf::RectangleShape rect(sf::Vector2f(w, h));
+    rect.setFillColor(sf::Color(color));
+    rect.setPosition(topLeft.x, topLeft.y);
+    window_.draw(rect);
+}

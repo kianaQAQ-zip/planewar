@@ -45,8 +45,8 @@ if(NOT _sfml_usable AND NOT DEFINED ENV{SFML_DIR})
         "<路径>/lib/cmake/SFML，或先『删除缓存并重新配置』再试。")
 endif()
 
-# SFML 2.5+ 即可（2.6 也满足）
-find_package(SFML 2.5 COMPONENTS graphics window system REQUIRED)
+# SFML 2.5+ 即可（2.6 也满足）；audio 组件用于 M3 音效
+find_package(SFML 2.5 COMPONENTS graphics window system audio REQUIRED)
 
 file(GLOB_RECURSE SRC CONFIGURE_DEPENDS src/*.cpp)
 add_executable(PlaneWar ${SRC})
@@ -56,8 +56,8 @@ target_include_directories(PlaneWar PRIVATE src)
 
 # SFML 2.6.2 的 config 包导出的导入目标名为小写带连字符（sfml-graphics 等），
 # 而非 SFML 3.x 的大写 SFML::Graphics 形式。注意：链接 sfml-graphics 会自动带入
-# sfml-window 与 sfml-system，这里显式写出三者以保持清晰。
-target_link_libraries(PlaneWar PRIVATE sfml-graphics sfml-window sfml-system)
+# sfml-window 与 sfml-system，这里显式写出三者以保持清晰；sfml-audio 用于 M3 音效。
+target_link_libraries(PlaneWar PRIVATE sfml-graphics sfml-window sfml-system sfml-audio)
 
 # ---------------------------------------------------------------------------
 # 自动拷贝 SFML 动态库（.dll）到 exe 同目录 —— 仅「预编译 SFML」路线需要
@@ -79,5 +79,14 @@ if(WIN32 AND SFML_FOUND)
     else()
         message(WARNING "PlaneWar: 未找到 SFML 的 bin 目录（${_sfml_bin}），"
                         "运行时若报缺 dll，请手动拷贝 sfml-*-2.dll 到 exe 旁。")
+    endif()
+
+    # OpenAL 是 sfml-audio 的运行期依赖，但文件名没有 sfml- 前缀，需单独拷贝。
+    set(_openal "${_sfml_bin}/openal32.dll")
+    if(EXISTS "${_openal}")
+        add_custom_command(TARGET PlaneWar POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                    "${_openal}" "$<TARGET_FILE_DIR:PlaneWar>"
+            COMMENT "PlaneWar: 拷贝 openal32.dll（SFML 音频依赖）")
     endif()
 endif()

@@ -28,7 +28,7 @@ int main()
     World world;
     world.LoadAssets(assets);   // 统一在此登记所有贴图与字体（缺资源自动兜底）
 
-    std::cout << "[M2] PlaneWar 启动：方向键/WASD 移动，空格射击。\n";
+    std::cout << "[M3] PlaneWar 启动：方向键/WASD 移动，空格射击。清完三波后迎战 Boss！\n";
 
     bool gameOverPrinted = false;
 
@@ -56,7 +56,10 @@ int main()
 
         if (world.IsGameOver() && !gameOverPrinted)
         {
-            std::cout << "[M2] 游戏结束！得分: " << world.GetScore() << "\n";
+            if (world.HasWon())
+                std::cout << "[M3] 胜利！Boss 已被击毁，得分: " << world.GetScore() << "\n";
+            else
+                std::cout << "[M3] 游戏结束！得分: " << world.GetScore() << "\n";
             gameOverPrinted = true;
         }
     }

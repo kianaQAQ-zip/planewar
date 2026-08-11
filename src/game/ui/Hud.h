@@ -9,5 +9,7 @@ class Renderer;   // 前向声明：Game 层头文件不引入 SFML
 class Hud
 {
 public:
-    void Draw(Renderer& renderer, int score, int lives, int wave) const;
+    // bossHpPercent<0 表示当前无 Boss（不画血条）；weaponLevel/shielded 显示玩家状态。
+    void Draw(Renderer& renderer, int score, int lives, int wave,
+              int bossHpPercent = -1, int weaponLevel = 0, bool shielded = false) const;
 };
