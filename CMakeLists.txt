@@ -51,8 +51,11 @@ find_package(SFML 2.5 COMPONENTS graphics window system audio REQUIRED)
 file(GLOB_RECURSE SRC CONFIGURE_DEPENDS src/*.cpp)
 add_executable(PlaneWar ${SRC})
 
-# 让 #include "core/Window.h" 这类写法能解析
-target_include_directories(PlaneWar PRIVATE src)
+# 让 #include "core/Window.h" 这类写法能解析（前缀风格）
+# 同时把 src/game 也加进去：src/game/waves、src/game/ui、src/game/events
+# 等子目录里的文件用裸名 #include "GameConfig.h" / "ObjectPool.h"
+# （这些头文件在 src/game/ 下，不在子目录自身里），需要 src/game 在包含路径上。
+target_include_directories(PlaneWar PRIVATE src src/game)
 
 # SFML 2.6.2 的 config 包导出的导入目标名为小写带连字符（sfml-graphics 等），
 # 而非 SFML 3.x 的大写 SFML::Graphics 形式。注意：链接 sfml-graphics 会自动带入
@@ -100,7 +103,7 @@ if(BUILD_TESTS)
     add_executable(PlaneWarTests ${TEST_SRC})
     # 被测单元（Math / ObjectPool / EventBus / Collision / GameConfig / WaveDef）
     # 全部是 SFML-free 头文件，因此测试目标无需链接 SFML，也无需编译游戏 .cpp。
-    target_include_directories(PlaneWarTests PRIVATE src)
+    target_include_directories(PlaneWarTests PRIVATE src src/game)
     if(MSVC)
         target_compile_options(PlaneWarTests PRIVATE /utf-8)
     endif()
