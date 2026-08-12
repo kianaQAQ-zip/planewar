@@ -18,6 +18,10 @@ public:
     // 背景等：按左上角贴图（有图贴图，无图跳过）
     void DrawSprite(SpriteId id, const sf::Vector2f& position);
 
+    // 全屏背景：把小尺寸背景贴图平铺铺满整个窗口（有图平铺，无图跳过）。
+    // 平铺而非拉伸，避免星点被拉成椭圆；背景图多为小尺寸可平铺纹理。
+    void DrawBackground(SpriteId id);
+
     // 实体专用：按中心绘制，目标直径约为 2*radius。
     // 若对应 SpriteId 未加载纹理，则用 fallbackColor 画一个实心圆占位——
     // 这样「没有美术素材也能看到 demo 跑起来」，且 Game 层完全无感。

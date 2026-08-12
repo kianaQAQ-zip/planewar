@@ -27,6 +27,31 @@ void Renderer::DrawSprite(SpriteId id, const sf::Vector2f& position)
     window_.draw(it->second);
 }
 
+void Renderer::DrawBackground(SpriteId id)
+{
+    const sf::Texture* tex = assets_.GetTexture(id);
+    if (!tex) return;                     // 缺背景图：保留 Clear 的底色，不崩
+
+    sf::Sprite sprite(*tex);
+    const sf::Vector2u texSize = tex->getSize();
+    if (texSize.x == 0 || texSize.y == 0) return;
+
+    const sf::Vector2u winSize = window_.getSize();
+    // 计算需要几行几列才能完全覆盖窗口（向上取整，宁可多盖一点）
+    const int cols = static_cast<int>((winSize.x + texSize.x - 1) / texSize.x);
+    const int rows = static_cast<int>((winSize.y + texSize.y - 1) / texSize.y);
+
+    for (int y = 0; y < rows; ++y)
+    {
+        for (int x = 0; x < cols; ++x)
+        {
+            sprite.setPosition(static_cast<float>(x * texSize.x),
+                               static_cast<float>(y * texSize.y));
+            window_.draw(sprite);
+        }
+    }
+}
+
 void Renderer::DrawEntity(SpriteId id, const Vec2& position, float radius, unsigned int fallbackColor)
 {
     auto it = spriteCache_.find(id);

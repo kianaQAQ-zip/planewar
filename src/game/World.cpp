@@ -21,13 +21,13 @@ void World::LoadAssets(AssetManager& assets)
 
     // 音效（M3）：缺失则静默降级，不影响玩法。需要 SFML 音频 + openal32.dll。
     auto& audio = AudioManager::Instance();
-    audio.LoadSound("shoot",       "assets/sfx/shoot.wav");
-    audio.LoadSound("explosion",   "assets/sfx/explosion.wav");
-    audio.LoadSound("player_hit",  "assets/sfx/player-hit.wav");
-    audio.LoadSound("powerup",     "assets/sfx/powerup.wav");
-    audio.LoadSound("boss_spawn",  "assets/sfx/boss-spawn.wav");
-    audio.LoadSound("boss_hit",    "assets/sfx/boss-hit.wav");
-    audio.LoadSound("boss_death",  "assets/sfx/boss-death.wav");
+    audio.LoadSound("shoot",       "assets/sfx/shoot.ogg");
+    audio.LoadSound("explosion",   "assets/sfx/explosion.ogg");
+    audio.LoadSound("player_hit",  "assets/sfx/player-hit.ogg");
+    audio.LoadSound("powerup",     "assets/sfx/powerup.ogg");
+    audio.LoadSound("boss_spawn",  "assets/sfx/boss-spawn.ogg");
+    audio.LoadSound("boss_hit",    "assets/sfx/boss-hit.ogg");
+    audio.LoadSound("boss_death",  "assets/sfx/boss-death.ogg");
 }
 
 void World::Reset()

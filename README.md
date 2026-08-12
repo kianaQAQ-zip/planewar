@@ -64,10 +64,11 @@
      `SFML_DIR = <你的路径>/lib/cmake/SFML`
 3. 选择 `x64-Debug` → 按 **Ctrl+F5** 编译运行
 
-### 3.（可选）放入美术资源
+### 3. 美术 / 字体资源（已随仓库内置）
 
-把素材包里的图片丢进 `assets/` 即可显示真飞机贴图（无需改代码）。
-缺少图片也能跑——`Core` 会自动用彩色圆占位，游戏逻辑完全不受影响。
+本项目已内置一套 **Kenney「Space Shooter Redux」** 美术包（[CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)，可商用，无需署名）。图片与字体已随仓库提交，**开箱即有真飞机贴图**，无需任何额外操作。
+
+若想替换成自己的素材，把同名文件覆盖进 `assets/` 即可（文件名必须一致，代码按文件名加载）；缺某个文件也不会崩——`Core` 会自动用彩色圆占位。来源精灵见下表「来源」列。
 
 | 文件名 | 用途 |
 |---|---|
@@ -82,21 +83,20 @@
 | `assets/powerup.png` | 道具 |
 | `assets/font.ttf` | HUD 字体（缺失则 HUD 跳过，不影响游戏） |
 
-### 4.（可选）音效
+### 4. 音效（已随仓库内置）
 
-M3 加入了音效（`AudioManager`，基于 SFML Audio）。把以下 `.wav` 放进
-`assets/sfx/` 即可听到；**缺失则静默降级，游戏照常运行**。音效开启还需
+M3 加入音效（`AudioManager`，基于 SFML Audio）。包内附带的 7 个 `.ogg` 音效已随仓库提交；**缺失则静默降级，游戏照常运行**。音效开启还需
 `openal32.dll`（SFML 音频的运行期依赖，CMake 会在构建后自动拷贝到 exe 旁）。
 
 | 文件名 | 触发时机 |
 |---|---|
-| `assets/sfx/shoot.wav` | 玩家开火 |
-| `assets/sfx/explosion.wav` | 敌机被击毁 |
-| `assets/sfx/player-hit.wav` | 玩家被击中 |
-| `assets/sfx/powerup.wav` | 拾取道具 |
-| `assets/sfx/boss-spawn.wav` | Boss 进场 |
-| `assets/sfx/boss-hit.wav` | Boss 被击中 |
-| `assets/sfx/boss-death.wav` | Boss 被击毁 |
+| `assets/sfx/shoot.ogg` | 玩家开火 |
+| `assets/sfx/explosion.ogg` | 敌机被击毁 |
+| `assets/sfx/player-hit.ogg` | 玩家被击中 |
+| `assets/sfx/powerup.ogg` | 拾取道具 |
+| `assets/sfx/boss-spawn.ogg` | Boss 进场 |
+| `assets/sfx/boss-hit.ogg` | Boss 被击中 |
+| `assets/sfx/boss-death.ogg` | Boss 被击毁 |
 
 ---
 
@@ -191,7 +191,7 @@ planewar/
 │       ├── waves/WaveDef + WaveManager
 │       ├── ScoreManager / Hud
 │       ├── Collision / Input / GameConfig
-├── assets/                      # 图片/字体/音效（占位即可）
+├── assets/                      # 图片/字体/音效（内置 Kenney CC0 资源）
 └── docs/                        # 设计规划 + 学习文档
 ```
 

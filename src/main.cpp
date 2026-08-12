@@ -50,7 +50,7 @@ int main()
             world.Update(Time::FIXED_STEP, input);
 
         renderer.Clear(sf::Color(10, 12, 24));          // 深空蓝兜底色
-        renderer.DrawSprite(SpriteId::Background, {0.f, 0.f}); // 有图就画，无图跳过
+        renderer.DrawBackground(SpriteId::Background);  // 平铺背景，有图铺满，无图跳过
         world.Render(renderer);
         renderer.Display();
 
