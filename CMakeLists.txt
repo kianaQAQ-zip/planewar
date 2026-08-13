@@ -95,6 +95,23 @@ if(WIN32 AND SFML_FOUND)
 endif()
 
 # ---------------------------------------------------------------------------
+# 自动把 assets/ 目录同步到 exe 输出目录
+# ---------------------------------------------------------------------------
+# VS「打开文件夹」模式下，exe 输出在 out/build/<cfg>/，而资源在项目根目录 assets/。
+# 运行时不一定能以项目根目录为工作目录，因此构建后把资源目录拷贝到 exe 旁边，
+# 这样无论通过 VS 调试还是直接双击 exe，都能正确加载图片/字体/音效。
+# ---------------------------------------------------------------------------
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/assets" AND IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/assets")
+    add_custom_command(TARGET PlaneWar POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+                "${CMAKE_CURRENT_SOURCE_DIR}/assets" "$<TARGET_FILE_DIR:PlaneWar>/assets"
+        COMMENT "PlaneWar: 拷贝 assets 到输出目录")
+    message(STATUS "PlaneWar: 将在构建后自动拷贝 assets 到 exe 输出目录")
+else()
+    message(WARNING "PlaneWar: 未找到 assets/ 目录，运行时将使用占位渲染与静默音频")
+endif()
+
+# ---------------------------------------------------------------------------
 # M4：单元测试（纯逻辑层，不依赖 SFML，可脱离游戏 exe 独立构建/运行）
 # ---------------------------------------------------------------------------
 option(BUILD_TESTS "Build the PlaneWar unit-test target" ON)
