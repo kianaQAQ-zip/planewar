@@ -6,16 +6,15 @@ WaveManager::WaveManager()
     // 每种敌机用不同的 SpriteId / 颜色 / 速度，即使没有美术素材也能靠占位圆区分。
     waves_ = {
         // 第 1 波：慢速基础敌机，数量少、间隔大
-        { .count = 8,  .interval = 1.1f, .sprite = SpriteId::EnemyBasic,
-          .speed = 110.f, .radius = 22.f, .color = 0xFF4444FF, .score = 100 },
+        // 注意：这里用 C++17 兼容的按顺序聚合初始化，避免 designated initializers
+        // 触发 MSVC C7555（/std:c++17 不支持命名字段初始化）。
+        { 8,  1.1f, SpriteId::EnemyBasic, 110.f, 22.f, 0xFF4444FF, 100 },
 
         // 第 2 波：更快的敌机，数量增多
-        { .count = 12, .interval = 0.8f, .sprite = SpriteId::EnemyFast,
-          .speed = 200.f, .radius = 18.f, .color = 0xFFAA33FF, .score = 150 },
+        { 12, 0.8f, SpriteId::EnemyFast,  200.f, 18.f, 0xFFAA33FF, 150 },
 
         // 第 3 波：密集基础敌机，压力大
-        { .count = 16, .interval = 0.55f, .sprite = SpriteId::EnemyTank,
-          .speed = 95.f,  .radius = 28.f, .color = 0xAA44FFFF, .score = 200 },
+        { 16, 0.55f, SpriteId::EnemyTank, 95.f,  28.f, 0xAA44FFFF, 200 },
     };
 }
 
